@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from app.api.routes import analyze, indicator, signals
+from app.api.routes import analyze, indicator, scan, signals
 from app.core.config import settings
 
 app = FastAPI(
@@ -26,6 +26,11 @@ app.include_router(
     indicator.router,
     prefix="/api/v1/indicator",
     tags=["indicator-inputs"],
+)
+app.include_router(
+    scan.router,
+    prefix="/api/v1/scan",
+    tags=["scan"],
 )
 
 
