@@ -1,19 +1,36 @@
 from fastapi import FastAPI
-from app.api.routes import signals, indicator
+
+from app.api.routes import analyze, indicator, signals
 from app.core.config import settings
 
 app = FastAPI(
     title="Trading Signal Agent",
     version="0.1.0",
-    description="Claude-powered trading signal generation API",
+    description="Claude-powered ICT/SMT trading signal generation API",
 )
 
-app.include_router(signals.router, prefix="/signals", tags=["signals"])
+# ── Routes ─────────────────────────────────────────────────────────
+# Order matters: more specific prefixes first.
+
 app.include_router(
-    indicator.router, prefix="/api/v1/indicator", tags=["indicator-inputs"]
+    analyze.router,
+    prefix="/api/v1/analyze",
+    tags=["analyze"],
+)
+app.include_router(
+    signals.router,
+    prefix="/api/v1/signals",
+    tags=["signals"],
+)
+app.include_router(
+    indicator.router,
+    prefix="/api/v1/indicator",
+    tags=["indicator-inputs"],
 )
 
 
-@app.get("/health")
+# ── Health ─────────────────────────────────────────────────────────
+
+@app.get("/health", tags=["health"])
 def health():
     return {"status": "ok", "env": settings.APP_ENV}

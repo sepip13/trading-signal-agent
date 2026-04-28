@@ -1,9 +1,13 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import String, Float, DateTime, JSON
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.db.session import Base
+
+
+def _utcnow() -> datetime:
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class IndicatorInput(Base):
@@ -16,5 +20,5 @@ class IndicatorInput(Base):
     bias: Mapped[str] = mapped_column(String(20))  # LONG / SHORT / NEUTRAL
     extra_data: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.utcnow
+        DateTime, default=_utcnow
     )
