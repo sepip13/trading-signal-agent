@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api.routes import signals
+from app.api.routes import signals, indicator
 from app.core.config import settings
 
 app = FastAPI(
@@ -9,6 +9,9 @@ app = FastAPI(
 )
 
 app.include_router(signals.router, prefix="/signals", tags=["signals"])
+app.include_router(
+    indicator.router, prefix="/api/v1/indicator", tags=["indicator-inputs"]
+)
 
 
 @app.get("/health")
